@@ -122,9 +122,9 @@ body {
 }
 
 .stat-icon {
-    font-size: 3rem;
-    width: 80px;
-    height: 80px;
+    font-size: 2rem;
+    width: 60px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
