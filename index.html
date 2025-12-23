@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Таблица Продаж Агентов</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Полноэкранная анимация продажи -->
+    <div id="saleAnimation" class="sale-animation hidden">
+        <div class="sale-content">
+            <div class="confetti-container" id="confettiContainer"></div>
+            <div class="sale-icon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <div class="sale-agent-name" id="saleAgentName"></div>
+            <div class="sale-amount" id="saleAmount"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-chart-line"></i> Отслеживание Продаж</h1>
+            <div class="header-link">
+                <a href="/admin.html" class="admin-link">
+                    <i class="fas fa-user-shield"></i> Админ-панель
+                </a>
+            </div>
+        </header>
+
+        <!-- Статистика -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Продажи за сегодня</div>
+                    <div class="stat-value" id="totalToday">$0</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Продажи за месяц</div>
+                    <div class="stat-value" id="totalMonth">$0</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Текущая дата</div>
+                    <div class="stat-value" id="currentDate"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Таблица агентов -->
+        <div class="table-container">
+            <div class="table-header">
+                <h2><i class="fas fa-users"></i> Рейтинг Агентов</h2>
+                <div class="loading-indicator" id="loadingIndicator">
+                    <i class="fas fa-sync-alt fa-spin"></i>
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <table class="agents-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-trophy"></i> Место</th>
+                            <th><i class="fas fa-user"></i> Имя агента</th>
+                            <th><i class="fas fa-dollar-sign"></i> Сегодня</th>
+                            <th><i class="fas fa-chart-bar"></i> За месяц</th>
+                        </tr>
+                    </thead>
+                    <tbody id="agentsTableBody">
+                        <tr class="empty-state">
+                            <td colspan="4">
+                                <i class="fas fa-inbox"></i>
+                                <p>Нет данных о продажах</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
