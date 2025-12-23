@@ -41,7 +41,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 30px 0;
+    padding: 10px 0;
     border-bottom: 2px solid var(--border-color);
     margin-bottom: 40px;
     flex-wrap: wrap;
@@ -69,7 +69,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 24px;
+    padding: 6px 18px;
     background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
     color: white;
     text-decoration: none;
@@ -77,6 +77,7 @@ body {
     font-weight: 600;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
+    opacity: 0.6;
 }
 
 .admin-link:hover {
