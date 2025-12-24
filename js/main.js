@@ -81,6 +81,16 @@ function createConfetti() {
 function showSaleAnimation(agentName, amount) {
     if (isAnimationPlaying) return;
     
+    // --- ЗВУКОВАЯ ЛОГИКА ---
+    const sound = document.getElementById('saleSound');
+    if (sound) {
+        sound.currentTime = 0; // Сброс на начало
+        sound.play().catch(error => {
+            console.warn("Автовоспроизведение аудио заблокировано браузером. Требуется клик на странице.");
+        });
+    }
+    // -----------------------
+
     isAnimationPlaying = true;
     const animation = document.getElementById('saleAnimation');
     const agentNameEl = document.getElementById('saleAgentName');
@@ -93,6 +103,7 @@ function showSaleAnimation(agentName, amount) {
     
     animation.classList.remove('hidden');
     
+    // Скрытие через 6 секунд (6000 мс)
     setTimeout(() => {
         animation.classList.add('hidden');
         isAnimationPlaying = false;
@@ -103,7 +114,6 @@ function showSaleAnimation(agentName, amount) {
 function updateTable(agentsData) {
     const tbody = document.getElementById('agentsTableBody');
     
-    // Сортировка по продажам за месяц (убывание)
     const sortedAgents = [...agentsData].sort((a, b) => {
         return (b.sales_month || 0) - (a.sales_month || 0);
     });
@@ -142,13 +152,11 @@ function checkForNewSales(newAgents) {
         return;
     }
     
-    // Создаем карту старых данных агентов
     const oldAgentsMap = new Map();
     agents.forEach(agent => {
         oldAgentsMap.set(agent.id, agent);
     });
     
-    // Проверяем каждого агента на новые продажи
     newAgents.forEach(newAgent => {
         const oldAgent = oldAgentsMap.get(newAgent.id);
         
@@ -156,7 +164,6 @@ function checkForNewSales(newAgents) {
             const oldSalesMonth = oldAgent.sales_month || 0;
             const newSalesMonth = newAgent.sales_month || 0;
             
-            // Если продажи за месяц увеличились
             if (newSalesMonth > oldSalesMonth) {
                 const saleAmount = newSalesMonth - oldSalesMonth;
                 showSaleAnimation(newAgent.name, saleAmount);
@@ -173,7 +180,6 @@ async function updateData() {
     try {
         const newAgents = await loadAgents();
         
-        // Проверяем на новые продажи перед обновлением данных
         if (agents.length > 0) {
             checkForNewSales(newAgents);
         }
@@ -195,14 +201,10 @@ async function init() {
     updateCurrentDate();
     await updateData();
     
-    // Автоообновление каждые 2 секунды
     setInterval(updateData, 2000);
-    
-    // Обновление даты каждую минуту
     setInterval(updateCurrentDate, 60000);
 }
 
-// Запуск при загрузке страницы
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
 } else {
