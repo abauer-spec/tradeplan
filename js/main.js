@@ -96,7 +96,7 @@ function showSaleAnimation(agentName, amount) {
     setTimeout(() => {
         animation.classList.add('hidden');
         isAnimationPlaying = false;
-    }, 4000);
+    }, 6000);
 }
 
 // Обновление таблицы агентов
