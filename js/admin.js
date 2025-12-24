@@ -167,7 +167,8 @@ async function resetTodaySales() {
     
     try {
         const updatePromises = agents.map(agent => {
-            return fetch(`tables/agents/${agent.id}`, {
+            // Добавили "/" перед tables
+            return fetch(`/tables/agents/${agent.id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
@@ -178,9 +179,15 @@ async function resetTodaySales() {
             });
         });
         
-        await Promise.all(updatePromises);
-        showNotification('Продажи за сегодня успешно сброшены для всех агентов');
-        await loadAgents();
+        const results = await Promise.all(updatePromises);
+        
+        // Проверяем, все ли запросы прошли успешно
+        if (results.every(r => r.ok)) {
+            showNotification('Продажи за сегодня успешно сброшены');
+            await loadAgents();
+        } else {
+            throw new Error('Один или несколько запросов завершились ошибкой');
+        }
     } catch (error) {
         console.error('Ошибка сброса продаж за сегодня:', error);
         showNotification('Ошибка сброса продаж за сегодня', true);
