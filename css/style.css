@@ -147,7 +147,7 @@ body {
 }
 
 .stat-value {
-    font-size: 2.0rem;
+    font-size: 2.5rem;
     font-weight: 800;
     background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
     -webkit-background-clip: text;
@@ -156,7 +156,7 @@ body {
 }
 
 #currentDate {
-    font-size: 1.5rem;
+    font-size: 2.0rem;
 }
 
 /* Таблица */
@@ -208,7 +208,7 @@ body {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
-    font-size: 0.85rem;
+    font-size: 1.2rem;
     color: white;
 }
 
