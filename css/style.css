@@ -90,7 +90,7 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 25px;
-    margin-bottom: 40px;
+    /* margin-bottom: 40px; */
 }
 
 .stat-card {
@@ -173,7 +173,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
+    /* margin-bottom: 25px; */
 }
 
 .table-header h2 {
