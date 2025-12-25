@@ -70,13 +70,13 @@ body {
     align-items: center;
     gap: 8px;
     padding: 6px 18px;
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    /* background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); */
     color: white;
     text-decoration: none;
     border-radius: 12px;
-    font-weight: 600;
+    /* font-weight: 600; */
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
+    /* box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3); */
     opacity: 0.6;
 }
 
