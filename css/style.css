@@ -219,7 +219,7 @@ body {
 
 .agents-table tbody tr:hover {
     background: rgba(0, 217, 255, 0.05);
-    transform: scale(1.01);
+    /* transform: scale(1.01); */
 }
 
 .agents-table tbody tr.top-agent {
