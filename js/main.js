@@ -75,17 +75,31 @@ function createConfetti() {
 function showSaleAnimation(agentName, amount) {
     if (isAnimationPlaying) return;
     isAnimationPlaying = true;
+
     const animation = document.getElementById('saleAnimation');
     const agentNameEl = document.getElementById('saleAgentName');
     const amountEl = document.getElementById('saleAmount');
+    const saleSound = document.getElementById('saleSound'); // Получаем элемент звука
+
     agentNameEl.textContent = agentName;
     amountEl.textContent = formatCurrency(amount);
+    
+    // Запуск звука
+    if (saleSound) {
+        saleSound.currentTime = 0;
+        saleSound.play().catch(error => {
+            console.warn("Автовоспроизведение звука заблокировано браузером. Требуется взаимодействие пользователя с и страницей.", error);
+        });
+    }
+
     createConfetti();
     animation.classList.remove('hidden');
+
     setTimeout(() => {
         animation.classList.add('hidden');
         isAnimationPlaying = false;
-    }, 8000);
+        saleSound.pause()
+    }, 6000);
 }
 
 // Обновление таблицы агентов
