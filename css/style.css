@@ -301,7 +301,7 @@ body {
 }
 
 .sale-icon {
-    font-size: 10rem;
+    font-size: 12rem;
     margin-bottom: 30px;
     animation: bounce 1s infinite;
 }
@@ -320,7 +320,7 @@ body {
 }
 
 .sale-agent-name {
-    font-size: 4rem;
+    font-size: 8rem;
     font-weight: 900;
     margin-bottom: 20px;
     background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
@@ -330,7 +330,7 @@ body {
 }
 
 .sale-amount {
-    font-size: 6rem;
+    font-size: 10rem;
     font-weight: 900;
     color: var(--accent-success);
     text-shadow: 0 0 50px rgba(0, 255, 136, 0.5);
