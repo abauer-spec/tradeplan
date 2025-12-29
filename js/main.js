@@ -30,7 +30,7 @@ function updateBestAgentDisplay(agentsData) {
         // displayElement.textContent = `${topAgent.name}: ${formatCurrency(topAgent.sales_today)}`;
         displayElement.innerHTML = `
             <div>${topAgent.name}</div>
-            <div style="font-size: 1.2em; font-weight: bold; margin-top: 5px; color: #ffd700;">
+            <div>
                 ${formatCurrency(topAgent.sales_today)}
             </div>
         `;
