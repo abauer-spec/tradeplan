@@ -12,19 +12,7 @@ function formatCurrency(amount) {
     }).format(amount);
 }
 
-// Получение текущей даты
-// function updateCurrentDate() {
-//     const now = new Date();
-//     const options = { 
-//         year: 'numeric', 
-//         month: 'long', 
-//         day: 'numeric',
-//         weekday: 'long'
-//     };
-//     const dateString = now.toLocaleDateString('ru-RU', options);
-//     document.getElementById('currentDate').textContent = dateString;
-// }
-// 1. Добавьте эту вспомогательную функцию в любое место файла №1
+// 1. Функция отображения лучшего агента (вместо даты)
 function updateBestAgentDisplay(agentsData) {
     const displayElement = document.getElementById('currentDate');
     
@@ -35,7 +23,7 @@ function updateBestAgentDisplay(agentsData) {
 
     // Ищем агента с максимальной суммой за сегодня
     const topAgent = agentsData.reduce((prev, current) => {
-        return (prev.sales_today > current.sales_today) ? prev : current;
+        return ((prev.sales_today || 0) > (current.sales_today || 0)) ? prev : current;
     });
 
     if (topAgent && topAgent.sales_today > 0) {
@@ -43,33 +31,6 @@ function updateBestAgentDisplay(agentsData) {
     } else {
         displayElement.textContent = "Сегодня продаж еще не было";
     }
-}
-
-async function updateData() {
-    const loadingIndicator = document.getElementById('loadingIndicator');
-    loadingIndicator.style.opacity = '1';
-    try {
-        const newAgents = await loadAgents();
-        if (agents.length > 0) {
-            checkForNewSales(newAgents);
-        }
-        agents = newAgents;
-        updateStats(agents);
-        updateTable(agents);
-        updateBestAgentDisplay(agents); 
-
-    } catch (error) {
-        console.error('Ошибка обновления данных:', error);
-    }
-    setTimeout(() => {
-        loadingIndicator.style.opacity = '0.3';
-    }, 300);
-}
-
-// 3. В функции init() удалите или закомментируйте обновление даты
-async function init() {
-    await updateData();
-    setInterval(updateData, 2000);
 }
 
 // Загрузка данных агентов
@@ -105,6 +66,7 @@ function updateStats(agentsData) {
 // Создание конфетти
 function createConfetti() {
     const container = document.getElementById('confettiContainer');
+    if (!container) return;
     container.innerHTML = '';
     const colors = ['#00d9ff', '#ff00ff', '#00ff88', '#ffd700', '#ff4757'];
     for (let i = 0; i < 100; i++) {
@@ -126,53 +88,43 @@ function showSaleAnimation(agentName, amount) {
     const animation = document.getElementById('saleAnimation');
     const agentNameEl = document.getElementById('saleAgentName');
     const amountEl = document.getElementById('saleAmount');
-    const saleSound = document.getElementById('saleSound'); // Получаем элемент звука
+    const saleSound = document.getElementById('saleSound');
 
-    agentNameEl.textContent = agentName;
-    amountEl.textContent = formatCurrency(amount);
+    if (agentNameEl) agentNameEl.textContent = agentName;
+    if (amountEl) amountEl.textContent = formatCurrency(amount);
     
-    // Запуск звука
     if (saleSound) {
         saleSound.currentTime = 0;
-        saleSound.play().catch(error => {
-            console.warn("Автовоспроизведение звука заблокировано браузером. Требуется взаимодействие пользователя с и страницей.", error);
-        });
+        saleSound.play().catch(error => console.warn("Звук заблокирован", error));
     }
 
     createConfetti();
-    animation.classList.remove('hidden');
+    if (animation) animation.classList.remove('hidden');
 
     setTimeout(() => {
-        animation.classList.add('hidden');
+        if (animation) animation.classList.add('hidden');
         isAnimationPlaying = false;
-        saleSound.pause()
+        if (saleSound) saleSound.pause();
     }, 6000);
 }
 
 // Обновление таблицы агентов
 function updateTable(agentsData) {
     const tbody = document.getElementById('agentsTableBody');
-    // Сортировка по продажам за месяц (убывание)
-    const sortedAgents = [...agentsData].sort((a, b) => {
-        return (b.sales_month || 0) - (a.sales_month || 0);
-    });
+    if (!tbody) return;
+
+    const sortedAgents = [...agentsData].sort((a, b) => (b.sales_month || 0) - (a.sales_month || 0));
+    
     if (sortedAgents.length === 0) {
-        tbody.innerHTML = `
-            <tr class="empty-state">
-                <td colspan="4">
-                    <i class="fas fa-inbox"></i>
-                    <p>Нет данных о продажах</p>
-                </td>
-            </tr>
-        `;
+        tbody.innerHTML = `<tr><td colspan="4">Нет данных</td></tr>`;
         return;
     }
+    
     tbody.innerHTML = sortedAgents.map((agent, index) => {
         const rank = index + 1;
-        const isTop = rank <= 3;
         const rankIcon = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
         return `
-            <tr ${isTop ? 'class="top-agent"' : ''}>
+            <tr class="${rank <= 3 ? 'top-agent' : ''}">
                 <td>${rankIcon}</td>
                 <td>${agent.name}</td>
                 <td>${formatCurrency(agent.sales_today || 0)}</td>
@@ -184,63 +136,57 @@ function updateTable(agentsData) {
 
 // Проверка новых продаж
 function checkForNewSales(newAgents) {
-    if (!agents || agents.length === 0) {
-        return;
-    }
+    if (!agents || agents.length === 0) return;
 
-    // Создаем карту старых данных агентов
     const oldAgentsMap = new Map();
-    agents.forEach(agent => {
-        oldAgentsMap.set(agent.id, agent);
-    });
+    agents.forEach(agent => oldAgentsMap.set(agent.id, agent));
 
-    // Проверяем каждого агента на новые продажи
     newAgents.forEach(newAgent => {
         const oldAgent = oldAgentsMap.get(newAgent.id);
         if (oldAgent) {
             const oldSalesMonth = oldAgent.sales_month || 0;
             const newSalesMonth = newAgent.sales_month || 0;
-            // Если продажи за месяц увеличились
             if (newSalesMonth > oldSalesMonth) {
-                const saleAmount = newSalesMonth - oldSalesMonth;
-                showSaleAnimation(newAgent.name, saleAmount);
+                showSaleAnimation(newAgent.name, newSalesMonth - oldSalesMonth);
             }
         }
     });
 }
 
-// Основная функция обновления данных
+// 2. Основная функция обновления (ЕДИНСТВЕННАЯ ВЕРСИЯ)
 async function updateData() {
     const loadingIndicator = document.getElementById('loadingIndicator');
-    loadingIndicator.style.opacity = '1';
+    if (loadingIndicator) loadingIndicator.style.opacity = '1';
+    
     try {
         const newAgents = await loadAgents();
-        // Проверяем на новые продажи перед обновлением данных
         if (agents.length > 0) {
             checkForNewSales(newAgents);
         }
         agents = newAgents;
+        
         updateStats(agents);
         updateTable(agents);
+        updateBestAgentDisplay(agents); // Наш лучший агент
+
     } catch (error) {
         console.error('Ошибка обновления данных:', error);
     }
-    setTimeout(() => {
-        loadingIndicator.style.opacity = '0.3';
-    }, 300);
+    
+    if (loadingIndicator) {
+        setTimeout(() => {
+            loadingIndicator.style.opacity = '0.3';
+        }, 300);
+    }
 }
 
-// Инициализация
+// 3. Инициализация (ЕДИНСТВЕННАЯ ВЕРСИЯ)
 async function init() {
-    updateCurrentDate();
     await updateData();
-    // Автоообновление каждые 2 секунды
     setInterval(updateData, 2000);
-    // Обновление даты каждую минуту
-    setInterval(updateCurrentDate, 60000);
 }
 
-// Запуск при загрузке страницы
+// Запуск
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
 } else {
