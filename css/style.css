@@ -155,9 +155,12 @@ body {
     background-clip: text;
 }
 
-#currentDate {
+.stat-dm {
     font-size: 1.9rem;
 }
+/* #currentDate {
+    font-size: 1.9rem;
+} */
 
 /* Таблица */
 .table-container {
