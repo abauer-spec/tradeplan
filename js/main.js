@@ -13,16 +13,63 @@ function formatCurrency(amount) {
 }
 
 // Получение текущей даты
-function updateCurrentDate() {
-    const now = new Date();
-    const options = { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric',
-        weekday: 'long'
-    };
-    const dateString = now.toLocaleDateString('ru-RU', options);
-    document.getElementById('currentDate').textContent = dateString;
+// function updateCurrentDate() {
+//     const now = new Date();
+//     const options = { 
+//         year: 'numeric', 
+//         month: 'long', 
+//         day: 'numeric',
+//         weekday: 'long'
+//     };
+//     const dateString = now.toLocaleDateString('ru-RU', options);
+//     document.getElementById('currentDate').textContent = dateString;
+// }
+// 1. Добавьте эту вспомогательную функцию в любое место файла №1
+function updateBestAgentDisplay(agentsData) {
+    const displayElement = document.getElementById('currentDate');
+    
+    if (!agentsData || agentsData.length === 0) {
+        displayElement.textContent = "Нет данных";
+        return;
+    }
+
+    // Ищем агента с максимальной суммой за сегодня
+    const topAgent = agentsData.reduce((prev, current) => {
+        return (prev.sales_today > current.sales_today) ? prev : current;
+    });
+
+    if (topAgent && topAgent.sales_today > 0) {
+        displayElement.textContent = `${topAgent.name}: ${formatCurrency(topAgent.sales_today)}`;
+    } else {
+        displayElement.textContent = "Сегодня продаж еще не было";
+    }
+}
+
+async function updateData() {
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    loadingIndicator.style.opacity = '1';
+    try {
+        const newAgents = await loadAgents();
+        if (agents.length > 0) {
+            checkForNewSales(newAgents);
+        }
+        agents = newAgents;
+        updateStats(agents);
+        updateTable(agents);
+        updateBestAgentDisplay(agents); 
+
+    } catch (error) {
+        console.error('Ошибка обновления данных:', error);
+    }
+    setTimeout(() => {
+        loadingIndicator.style.opacity = '0.3';
+    }, 300);
+}
+
+// 3. В функции init() удалите или закомментируйте обновление даты
+async function init() {
+    await updateData();
+    setInterval(updateData, 2000);
 }
 
 // Загрузка данных агентов
