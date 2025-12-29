@@ -27,9 +27,15 @@ function updateBestAgentDisplay(agentsData) {
     });
 
     if (topAgent && topAgent.sales_today > 0) {
-        displayElement.textContent = `${topAgent.name}: ${formatCurrency(topAgent.sales_today)}`;
+        // displayElement.textContent = `${topAgent.name}: ${formatCurrency(topAgent.sales_today)}`;
+        displayElement.innerHTML = `
+            <div>${topAgent.name}</div>
+            <div style="font-size: 1.2em; font-weight: bold; margin-top: 5px; color: #ffd700;">
+                ${formatCurrency(topAgent.sales_today)}
+            </div>
+        `;
     } else {
-        displayElement.textContent = "Сегодня продаж еще не было";
+        displayElement.textContent = " ";
     }
 }
 
