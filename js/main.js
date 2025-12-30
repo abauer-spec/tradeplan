@@ -27,10 +27,9 @@ function updateBestAgentDisplay(agentsData) {
     });
 
     if (topAgent && topAgent.sales_today > 0) {
-        // displayElement.textContent = `${topAgent.name}: ${formatCurrency(topAgent.sales_today)}`;
         displayElement.innerHTML = `
-            <div>${topAgent.name}</div>
-            <div>
+            <div class="stat-dm-name">${topAgent.name}</div>
+            <div class="stat-dm-sum">
                 ${formatCurrency(topAgent.sales_today)}
             </div>
         `;
