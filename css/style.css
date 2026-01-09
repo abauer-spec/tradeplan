@@ -1,3 +1,7 @@
+html {
+  scroll-behavior: smooth;
+}
+
 /* Сброс стилей и базовые настройки */
 * {
     margin: 0;
